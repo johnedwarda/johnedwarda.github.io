@@ -57,6 +57,11 @@ ul{list-style:none;margin:0;padding:0}
 .pill{display:inline-flex;align-items:center;gap:12px;height:44px;padding:0 6px 0 18px;border-radius:22px;background:var(--ink);color:var(--bg)!important;text-decoration:none;font-size:15px;font-weight:500;border:0;cursor:pointer;font-family:inherit}
 .pill .dot{width:32px;height:32px;border-radius:16px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
 .pill:hover .dot{transform:rotate(-45deg)}
+.pill.soft{background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink)!important;transition:background .25s}
+.pill.soft:hover{background:color-mix(in srgb,var(--ink) 12%,transparent)}
+.pill.down:hover .dot{transform:translateY(3px)}
+.hero-meta{align-items:center}
+
 @media (max-width:640px){.nav-links a:not(.pill){display:none}}
 
 /* hero */
@@ -183,7 +188,7 @@ ul{list-style:none;margin:0;padding:0}
   <nav class="nav-links" aria-label="Main">
     <a href="#work" data-scroll="#work">Work</a>
     <a href="#about" data-scroll="#about" hidden>About</a>
-    <a class="pill" href="#contact" data-scroll="#contact">Get in touch
+    <a class="pill soft" href="#contact" data-scroll="#contact">Get in touch
       <span class="dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
   </nav>
@@ -205,9 +210,9 @@ ul{list-style:none;margin:0;padding:0}
       <p class="hero-intro" id="hero-intro">I turn everyday UX frustrations into smarter solutions.</p>
       <div class="hero-meta label" id="hero-meta">
         <span>Product design</span>
-        <span class="scroll-cue">My work
-          <svg width="12" height="14" viewBox="0 0 12 14" fill="none" aria-hidden="true"><path d="M6 1v12M1 8l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
+        <a class="pill soft down" href="#work" data-scroll="#work">My work
+          <span class="dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v10M3 8l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
       </div>
     </div>
   </div>
