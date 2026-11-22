@@ -56,7 +56,7 @@ ul{list-style:none;margin:0;padding:0}
 .top-btn:hover{text-decoration:underline}
 .mark-name{margin-top:18px;font-size:15px;color:var(--muted)}
 .mark-big{margin-top:clamp(56px,10vh,110px);color:var(--ink)}
-.mark-big svg{display:block;height:clamp(160px,26vw,380px);width:auto;overflow:visible}
+.mark-big svg{display:block;height:clamp(120px,26vw,380px);width:auto;overflow:visible}
 .nav-links{display:flex;align-items:center;gap:28px;font-size:15px}
 .nav-links a{text-decoration:none;color:var(--muted);transition:color .2s}
 .nav-links a:hover{color:var(--ink)}
@@ -163,7 +163,8 @@ ul{list-style:none;margin:0;padding:0}
 @media (max-width:860px){.about-cols>div,.about-cols>div:first-child{grid-column:1/-1}}
 
 /* contact */
-.contact{padding:clamp(110px,18vh,200px) var(--gutter) 40px}
+.contact{min-height:calc(100svh - 72px);box-sizing:border-box;display:flex;flex-direction:column;padding:clamp(40px,8vh,96px) var(--gutter) clamp(24px,4vh,40px)}
+.contact .mark-row{margin-top:auto;padding-top:clamp(32px,6vh,72px)}
 .big{font-size:clamp(56px,12vw,220px);line-height:.88;letter-spacing:-.055em;font-weight:600}
 .big em{font-family:var(--font-serif);font-style:italic;font-weight:400;letter-spacing:-.03em;color:var(--accent)}
 .contact-row{margin-top:clamp(36px,6vh,64px);display:flex;flex-direction:column;align-items:flex-start;gap:18px}
@@ -198,6 +199,10 @@ ul{list-style:none;margin:0;padding:0}
   .project .caption p{max-width:44ch}
   .project .chip.a{left:6%!important;top:8%!important}
   .project .chip.b{right:6%!important;bottom:10%!important}
+}
+@media (min-width:761px){
+  .big{font-size:clamp(40px,6vw,110px)}
+  .mark-big svg{height:clamp(96px,15.6vw,228px)}
 }
 </style>
 </head>
@@ -705,11 +710,11 @@ ul{list-style:none;margin:0;padding:0}
   var bigE=document.getElementById('big-e');
   if(bigE){
     var len=bigE.getTotalLength();
-    var mtl=gsap.timeline({scrollTrigger:{trigger:'.mark-big',start:'top 85%',end:'bottom 75%',scrub:true}});
+    var mtl=gsap.timeline({defaults:{duration:1.1,ease:'power3.out'},scrollTrigger:{trigger:'.mark-big',start:'top 98%',once:true}});
     mtl.fromTo(bigE,{strokeDasharray:len,strokeDashoffset:len},{strokeDashoffset:0,ease:'none'})
        .fromTo('#big-j',{yPercent:30,opacity:0},{yPercent:0,opacity:1,ease:'none'},0);
     gsap.from('#big-dot',{y:-60,scale:.4,transformOrigin:'50% 50%',duration:1.1,ease:'bounce.out',
-      scrollTrigger:{trigger:'.mark-big',start:'top 60%',once:true}});
+      delay:.5,scrollTrigger:{trigger:'.mark-big',start:'top 98%',once:true}});
   }
   /* nav mark: the dot hops on hover */
   var brand=document.querySelector('.brand');
