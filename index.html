@@ -152,12 +152,16 @@ ul{list-style:none;margin:0;padding:0}
 .contact{padding:clamp(110px,18vh,200px) var(--gutter) 40px}
 .big{font-size:clamp(56px,12vw,220px);line-height:.88;letter-spacing:-.055em;font-weight:600}
 .big em{font-family:var(--font-serif);font-style:italic;font-weight:400;letter-spacing:-.03em;color:var(--accent)}
-.contact-row{margin-top:clamp(36px,6vh,64px);display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px}
+.contact-row{margin-top:clamp(36px,6vh,64px);display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.contact-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.pill.alt{background:transparent;color:var(--ink)!important;border:1px solid var(--line)}
+.pill.alt .dot{background:#0A66C2;color:#fff}
 .email{font-size:clamp(20px,2vw,28px);letter-spacing:-.02em}
 .ghost{height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:15px;cursor:pointer;transition:background .2s}
 .ghost:hover{background:var(--bg)}
 .foot{margin-top:clamp(80px,14vh,140px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;padding-top:20px;border-top:1px solid var(--line);font-size:14px}
-.foot>div{grid-column:span 3}
+.foot>div{grid-column:span 6}
+.foot>div:last-child{text-align:right}
 .foot h4{margin:0 0 6px;font-size:13px;font-weight:500;color:var(--muted)}
 .foot a{text-decoration:none}
 .foot a:hover{text-decoration:underline}
@@ -513,10 +517,15 @@ ul{list-style:none;margin:0;padding:0}
   <h2 class="big" id="contact-title"><span class="ln" style="display:block;overflow:hidden"><span style="display:inline-block">Let&rsquo;s work</span></span><span class="ln" style="display:block;overflow:hidden"><span style="display:inline-block"><em>together.</em></span></span></h2>
   <div class="contact-row">
     <span class="email" id="email">hello@johnedward.com</span>
-    <button class="pill" type="button" id="copy">Copy email
+    <div class="contact-actions">
+      <button class="pill" type="button" id="copy">Copy email
       <span class="dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="4" y="4" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2 9V3a1 1 0 0 1 1-1h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
     </button>
-    <span class="label" id="copy-status" role="status" aria-live="polite"></span>
+      <a class="pill alt" href="https://www.linkedin.com/in/john-edward-9bb36728" target="_blank" rel="noopener">LinkedIn
+        <span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.6c0-1.34-.03-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96V21H9z"/></svg></span>
+      </a>
+      <span class="label" id="copy-status" role="status" aria-live="polite"></span>
+    </div>
   </div>
   <div class="mark-big" aria-hidden="true">
     <svg viewBox="2 6 86 96" preserveAspectRatio="xMinYMax meet">
@@ -527,8 +536,6 @@ ul{list-style:none;margin:0;padding:0}
   </div>
   <footer class="foot">
     <div><h4>© 2026</h4><span>John Edward</span></div>
-    <div><h4>Networking</h4><a href="#">LinkedIn</a></div>
-    <div><h4>Shots</h4><a href="#">Dribbble</a></div>
     <div><h4>Back</h4><button class="top-btn" type="button" data-scroll="#top">To the top ↑</button></div>
   </footer>
 </section>
