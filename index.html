@@ -51,7 +51,9 @@ ul{list-style:none;margin:0;padding:0}
 @media (max-width:420px){.brand span{display:none}}
 .mark-row{margin-top:clamp(56px,10vh,110px);display:flex;align-items:flex-end;gap:clamp(20px,3vw,40px);flex-wrap:wrap}
 .mark-row .mark-big{margin-top:0}
-.pill.up:hover .dot{transform:translateY(-3px)}
+.top-wrap{margin-left:auto;text-align:right;font-size:14px}
+.top-wrap h4{margin:0 0 6px;font-size:13px;font-weight:500;color:var(--muted)}
+.top-btn:hover{text-decoration:underline}
 .mark-name{margin-top:18px;font-size:15px;color:var(--muted)}
 .mark-big{margin-top:clamp(56px,10vh,110px);color:var(--ink)}
 .mark-big svg{display:block;height:clamp(160px,26vw,380px);width:auto;overflow:visible}
@@ -544,9 +546,7 @@ ul{list-style:none;margin:0;padding:0}
       <path id="big-e" d="M41 57H79A19 19 0 1 0 74.6 69.2" fill="none" stroke="currentColor" stroke-width="11"/>
     </svg>
     </div>
-    <button class="pill soft up" type="button" data-scroll="#top">Back to the top
-      <span class="dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 12V2M3 6l4-4 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-    </button>
+    <div class="top-wrap"><h4>Back</h4><button class="top-btn" type="button" data-scroll="#top">To the top ↑</button></div>
   </div>
   <p class="mark-name">John Edward</p>
 </section>
