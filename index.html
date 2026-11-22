@@ -617,6 +617,28 @@ ul{list-style:none;margin:0;padding:0}
   var brand=document.querySelector('.brand');
   brand.addEventListener('pointerenter',function(){gsap.fromTo(brand.querySelector('.je-mark'),{y:0},{y:-4,duration:.18,yoyo:true,repeat:1,ease:'power2.out'});});
 
+  /* snap: when a scroll comes to rest near the top of a section, ease it into place */
+  var snapPoints=[0,1];
+  function calcSnap(){
+    var max=ScrollTrigger.maxScroll(window)||1, pts=[0,1];
+    document.querySelectorAll('.hero, #work, .project, #about, #contact').forEach(function(el){
+      var y=smoother?smoother.offset(el,'top 72px'):el.getBoundingClientRect().top+window.scrollY-72;
+      pts.push(gsap.utils.clamp(0,1,y/max));
+    });
+    pts.sort(function(a,b){return a-b;});
+    snapPoints=pts.filter(function(p,i){return i===0||p-pts[i-1]>.002;});
+  }
+  ScrollTrigger.addEventListener('refresh',calcSnap);
+  ScrollTrigger.create({start:0,end:'max',snap:{
+    snapTo:function(v){
+      var max=ScrollTrigger.maxScroll(window)||1, reach=window.innerHeight*.4/max, best=v, d=Infinity;
+      snapPoints.forEach(function(p){var k=Math.abs(p-v);if(k<d){d=k;best=p;}});
+      return d<reach?best:v;
+    },
+    duration:{min:.35,max:.9},delay:.15,ease:'power2.inOut'
+  }});
+  calcSnap();
+
   /* cursor label over projects */
   var cur=document.getElementById('cursor'), label=document.getElementById('cursor-label');
   if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
