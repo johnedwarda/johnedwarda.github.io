@@ -101,11 +101,19 @@ ul{list-style:none;margin:0;padding:0}
 .project:nth-child(3n+1) .chip.b{right:15%;bottom:22%}
 @media (max-width:1100px){.project:not(:nth-child(3n+1)) .chip{display:none}}
 @media (max-width:520px){.chip{font-size:12px;height:40px;border-radius:20px;padding-right:12px}.chip .ic{width:28px;height:28px;border-radius:14px}.chip.a{left:5%!important;top:9%!important}.chip.b{right:5%!important;bottom:7%!important}}
+.ivi-split{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.ivi-cabin{position:relative;overflow:hidden}
+.ivi-cabin img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 45%;transform:scale(1.04);transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.media:hover .ivi-cabin img{transform:scale(1.07)}
+.ivi-side{display:grid;place-items:center;min-width:0}
+.ivi-side .ivi-wrap{width:84%}
+.ivi-side .ivi-controls{width:46%}
+@media (max-width:760px){.ivi-split{grid-template-columns:1fr}.ivi-side{display:none}}
 .ivi-wrap{height:auto!important;aspect-ratio:auto!important;width:64%;display:flex;flex-direction:column;align-items:center;gap:3%}
 .ivi-screen{width:100%;padding:6px;border-radius:20px;background:#1B1F27;box-shadow:0 0 0 1px rgba(255,255,255,.06);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .ivi-screen img{display:block;width:100%;height:auto;border-radius:14px}
 .ivi-controls{display:block;width:32%;height:auto;-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 70%,transparent 100%)}
-.media:hover .ivi-screen{transform:translateY(-6px)}
+
 @media (max-width:760px){.ivi-wrap{width:88%}.ivi-controls{width:56%}}
 .chip.ink{background:#1B1F27;color:#E8ECF2;box-shadow:0 12px 28px rgba(0,0,0,.4)}
 .project .chip.pin{top:7%!important;left:4%!important;bottom:auto;right:auto}
@@ -210,9 +218,14 @@ ul{list-style:none;margin:0;padding:0}
     <article class="project">
       <a class="media" href="https://flexitact.lovable.app" target="_blank" rel="noopener" style="--panel:#0A0C10" data-cursor="Try it live" aria-label="FlexiTact, open the live demo">
         <div class="chip a ink pin"><span class="ic" style="background:#2A2F38"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5EB8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>Patent pending</div>
-        <div class="phone-wrap ivi-wrap">
-          <div class="ivi-screen"><img src="assets/flexitact-screen.webp" width="2000" height="1153" alt="FlexiTact infotainment screen: driving info on the left, navigation map on the right, and a taskbar of climate, media and phone widgets with the climate widget in focus"></div>
-          <img class="ivi-controls" src="assets/flexitact-controls.webp" width="708" height="402" alt="The two physical controls: a jog toggle set to Climate and a rotary joystick adjusting temperature">
+        <div class="ivi-split">
+          <div class="ivi-cabin"><img src="assets/flexitact-cabin.webp" width="1400" height="1458" alt="FlexiTact in a car: the real infotainment UI on the centre screen, with the jog toggle and rotary joystick on the centre console"></div>
+          <div class="ivi-side">
+            <div class="phone-wrap ivi-wrap">
+              <div class="ivi-screen"><img src="assets/flexitact-screen.webp" width="2000" height="1153" alt="FlexiTact infotainment screen with driving info, map and a taskbar of widgets, the climate widget in focus"></div>
+              <img class="ivi-controls" src="assets/flexitact-controls.webp" width="708" height="402" alt="The jog toggle set to Climate and the rotary joystick adjusting temperature">
+            </div>
+          </div>
         </div>
       </a>
       <div class="caption">
