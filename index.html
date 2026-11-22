@@ -109,6 +109,10 @@ ul{list-style:none;margin:0;padding:0}
 .ivi-side .ivi-wrap{width:84%}
 .ivi-side .ivi-controls{width:46%}
 @media (max-width:760px){.ivi-split{grid-template-columns:1fr}.ivi-side{display:none}}
+.project.short .media{aspect-ratio:21/9}
+.project.short .ivi-cabin img{object-position:50% 72%}
+.project.short .ivi-side .ivi-wrap{width:68%}
+@media (max-width:760px){.project.short .media{aspect-ratio:4/5}.project.short .ivi-cabin img{object-position:50% 50%}}
 .ivi-wrap{height:auto!important;aspect-ratio:auto!important;width:64%;display:flex;flex-direction:column;align-items:center;gap:3%}
 .ivi-screen{width:100%;padding:6px;border-radius:20px;background:#1B1F27;box-shadow:0 0 0 1px rgba(255,255,255,.06);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .ivi-screen img{display:block;width:100%;height:auto;border-radius:14px}
@@ -215,7 +219,7 @@ ul{list-style:none;margin:0;padding:0}
   <div class="work-grid">
 
     <!-- PROJECT: copy one <article class="project"> block to add a project. The first, fourth, seventh... run full width; the rest sit in pairs. -->
-    <article class="project">
+    <article class="project short">
       <a class="media" href="https://flexitact.lovable.app" target="_blank" rel="noopener" style="--panel:#0A0C10" data-cursor="Try it live" aria-label="FlexiTact, open the live demo">
         <div class="chip a ink pin"><span class="ic" style="background:#2A2F38"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5EB8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>Patent pending</div>
         <div class="ivi-split">
