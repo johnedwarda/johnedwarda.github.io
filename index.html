@@ -205,6 +205,9 @@ ul{list-style:none;margin:0;padding:0}
   .mark-big svg{height:clamp(96px,15.6vw,228px)}
 }
 @media (max-width:760px){.contact-row{margin-bottom:64px}}
+#navcta .dot svg{transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+#navcta.is-top .dot svg{transform:rotate(-45deg)}
+#navcta.is-top:hover .dot{transform:none}
 </style>
 </head>
 <body>
@@ -215,7 +218,7 @@ ul{list-style:none;margin:0;padding:0}
   <nav class="nav-links" aria-label="Main">
     <a href="#work" data-scroll="#work">Work</a>
     <a href="#about" data-scroll="#about" hidden>About</a>
-    <a class="pill soft" href="#contact" data-scroll="#contact">Get in touch
+    <a class="pill soft" id="navcta" href="#contact" data-scroll="#contact"><span class="cta-label">Get in touch</span>
       <span class="dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
   </nav>
@@ -607,6 +610,20 @@ ul{list-style:none;margin:0;padding:0}
   if(window.SplitText)gsap.registerPlugin(SplitText);
 
   ScrollTrigger.create({start:10,end:'max',onToggle:function(s){nav.classList.toggle('scrolled',s.isActive);}});
+
+  /* nav button: "Back to top" while scrolling up, "Get in touch" near the top */
+  var cta=document.getElementById('navcta'), ctaLbl=cta.querySelector('.cta-label'), lastY=window.scrollY, backMode=false;
+  function setBack(on){
+    if(on===backMode)return; backMode=on;
+    ctaLbl.textContent=on?'Back to top':'Get in touch';
+    cta.setAttribute('data-scroll',on?'#top':'#contact'); cta.setAttribute('href',on?'#top':'#contact');
+    cta.classList.toggle('is-top',on);
+  }
+  window.addEventListener('scroll',function(){
+    var y=window.scrollY;
+    if(y<120)setBack(false); else if(y<lastY-2)setBack(true);
+    lastY=y;
+  },{passive:true});
 
   /* paging: one flick (wheel, trackpad or swipe) moves to the next section or card */
   var stops=[];
