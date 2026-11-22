@@ -178,7 +178,7 @@ ul{list-style:none;margin:0;padding:0}
   <a class="brand" href="#top" data-scroll="#top" aria-label="John Edward, back to top"><svg class="je-mark" viewBox="2 6 86 96" aria-hidden="true"><use href="#je"/></svg><span>John Edward</span></a>
   <nav class="nav-links" aria-label="Main">
     <a href="#work" data-scroll="#work">Work</a>
-    <a href="#about" data-scroll="#about">About</a>
+    <a href="#about" data-scroll="#about" hidden>About</a>
     <a class="pill" href="#contact" data-scroll="#contact">Get in touch
       <span class="dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
@@ -488,7 +488,8 @@ ul{list-style:none;margin:0;padding:0}
   <div class="more"><span>More projects on the way</span><span class="count" style="font-size:20px">2026</span></div>
 </section>
 
-<section class="wrap about" id="about" aria-labelledby="about-title">
+<!-- Hidden for now: remove the "hidden" attribute here and on the nav "About" link to bring the About section back. -->
+<section class="wrap about" id="about" aria-labelledby="about-title" hidden>
   <div class="section-head">
     <h2 class="section-title split" id="about-title">About</h2>
     <span class="count">(me)</span>
@@ -661,6 +662,7 @@ ul{list-style:none;margin:0;padding:0}
   function calcStops(){
     var max=ScrollTrigger.maxScroll(window), pts=[0,max];
     document.querySelectorAll('#work, .project, #about, #contact').forEach(function(el){
+      if(el.closest('[hidden]'))return;
       var y=el.getBoundingClientRect().top+window.scrollY-72;
       pts.push(Math.max(0,Math.min(max,Math.round(y))));
     });
