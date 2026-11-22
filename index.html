@@ -591,6 +591,12 @@ ul{list-style:none;margin:0;padding:0}
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
 <script>
+/* a refresh always starts at the top of the page */
+try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
+window.scrollTo(0,0);
+window.addEventListener('load',function(){window.scrollTo(0,0);});
+window.addEventListener('pageshow',function(){window.scrollTo(0,0);});
+window.addEventListener('beforeunload',function(){window.scrollTo(0,0);});
 (function(){
   var nav=document.getElementById('nav');
   var copyBtn=document.getElementById('copy');
