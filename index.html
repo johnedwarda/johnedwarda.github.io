@@ -630,12 +630,13 @@ ul{list-style:none;margin:0;padding:0}
   }
   ScrollTrigger.addEventListener('refresh',calcSnap);
   ScrollTrigger.create({start:0,end:'max',snap:{
-    snapTo:function(v){
-      var max=ScrollTrigger.maxScroll(window)||1, reach=window.innerHeight*.4/max, best=v, d=Infinity;
-      snapPoints.forEach(function(p){var k=Math.abs(p-v);if(k<d){d=k;best=p;}});
-      return d<reach?best:v;
+    snapTo:function(v,self){
+      var dir=self&&self.direction||1, pick=null;
+      if(dir>0){for(var i=0;i<snapPoints.length;i++){if(snapPoints[i]>=v-.001){pick=snapPoints[i];break;}}}
+      else{for(var j=snapPoints.length-1;j>=0;j--){if(snapPoints[j]<=v+.001){pick=snapPoints[j];break;}}}
+      return pick===null?v:pick;
     },
-    duration:{min:.35,max:.9},delay:.15,ease:'power2.inOut'
+    duration:{min:.4,max:1},delay:.08,ease:'power3.inOut',inertia:false
   }});
   calcSnap();
 
