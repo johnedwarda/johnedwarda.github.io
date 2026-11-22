@@ -204,6 +204,7 @@ ul{list-style:none;margin:0;padding:0}
   .big{font-size:clamp(40px,6vw,110px)}
   .mark-big svg{height:clamp(96px,15.6vw,228px)}
 }
+@media (max-width:760px){.contact-row{margin-bottom:64px}}
 </style>
 </head>
 <body>
@@ -588,7 +589,9 @@ ul{list-style:none;margin:0;padding:0}
   function goTo(sel){
     var el=document.querySelector(sel);
     if(!el)return;
-    if(window.ScrollToPlugin&&!reduce){gsap.to(window,{scrollTo:{y:el,offsetY:72,autoKill:false},duration:.9,ease:'power3.inOut'});}
+    var toTop=sel==='#top';
+    if(window.ScrollToPlugin&&!reduce){gsap.to(window,{scrollTo:toTop?{y:0,autoKill:false}:{y:el,offsetY:72,autoKill:false},duration:.9,ease:'power3.inOut'});}
+    else if(toTop){window.scrollTo(0,0);}
     else{el.scrollIntoView({behavior:reduce?'auto':'smooth'});}
   }
   document.querySelectorAll('[data-scroll]').forEach(function(a){
