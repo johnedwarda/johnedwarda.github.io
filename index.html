@@ -609,7 +609,7 @@ ul{list-style:none;margin:0;padding:0}
   var stops=[];
   function calcStops(){
     var max=ScrollTrigger.maxScroll(window), pts=[0,max];
-    document.querySelectorAll('#work, .project, #about, #contact').forEach(function(el){
+    document.querySelectorAll('#work, .project, #about').forEach(function(el){
       if(el.closest('[hidden]'))return;
       var y=el.getBoundingClientRect().top+window.scrollY-72;
       pts.push(Math.max(0,Math.min(max,Math.round(y))));
@@ -624,6 +624,8 @@ ul{list-style:none;margin:0;padding:0}
     var y=window.scrollY, target=null, i;
     if(dir>0){for(i=0;i<stops.length;i++){if(stops[i]>y+8){target=stops[i];break;}}}
     else{for(i=stops.length-1;i>=0;i--){if(stops[i]<y-8){target=stops[i];break;}}}
+    var liveMax=ScrollTrigger.maxScroll(window);
+    if(dir>0&&(target===null||target>=stops[stops.length-1]-2))target=y<liveMax-2?liveMax:null;
     if(target===null)return;
     moving=true; locked=true;
     gsap.to(window,{scrollTo:{y:target,autoKill:false},duration:reduce?.35:.95,ease:'power3.inOut',onComplete:function(){moving=false;}});
