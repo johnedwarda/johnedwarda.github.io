@@ -213,6 +213,13 @@ ul{list-style:none;margin:0;padding:0}
 @media (min-width:761px){
   .statement{font-size:clamp(28px,3.24vw,58px);margin:auto 0}
 }
+.hero-inner{justify-content:center!important}
+.hero-block{display:flex;flex-direction:column;align-items:flex-start}
+.statement .sub{font-size:.8em}
+.hero-block .hero-intro{margin-top:clamp(18px,2.6vh,28px);font-family:var(--font-serif);font-style:italic;color:var(--accent);font-size:clamp(22px,1.9vw,32px);line-height:1.25;max-width:none}
+.hero-block .hero-meta{display:block;border:0;padding:0;margin-top:clamp(20px,3vh,32px)}
+.hero-block .hero-meta .pill{margin-left:0}
+@media (min-width:761px){.hero-block .statement{margin:0}}
 </style>
 </head>
 <body>
@@ -235,15 +242,15 @@ ul{list-style:none;margin:0;padding:0}
 
 <section class="hero" id="top">
   <div class="hero-inner" id="hero-inner">
-    <h1 class="statement" id="statement">
-      <span class="ln big1"><span><span class="iam">I am</span> <em>John Edward.</em></span></span>
-      <span class="ln"><span>A Product Designer crafting</span></span>
-      <span class="ln"><span>intentional, clean and efficient</span></span>
-      <span class="ln"><span>digital experiences.</span></span>
-    </h1>
-    <div class="hero-foot">
+    <div class="hero-block">
+      <h1 class="statement" id="statement">
+        <span class="ln big1"><span><span class="iam">I am</span> <em>John Edward.</em></span></span>
+        <span class="ln sub"><span>A Product Designer crafting</span></span>
+        <span class="ln sub"><span>intentional, clean and efficient</span></span>
+        <span class="ln sub"><span>digital experiences.</span></span>
+      </h1>
       <p class="hero-intro" id="hero-intro">I turn everyday UX frustrations into smarter solutions.</p>
-      <div class="hero-meta label" id="hero-meta">
+      <div class="hero-meta" id="hero-meta">
         <a class="pill down" href="#work" data-scroll="#work">My work
           <span class="dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v10M3 8l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </a>
