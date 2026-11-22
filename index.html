@@ -655,6 +655,12 @@ ul{list-style:none;margin:0;padding:0}
     onUp:function(){step(1);}, onDown:function(){step(-1);},
     onStopDelay:.18, onStop:function(){if(!moving)locked=false;}
   });
+  /* Page Up / Page Down behave like a flick */
+  window.addEventListener('keydown',function(e){
+    if(e.key!=='PageDown'&&e.key!=='PageUp')return;
+    var t=e.target; if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))return;
+    e.preventDefault(); if(moving)return; locked=false; step(e.key==='PageDown'?1:-1);
+  });
   /* release the lock once the motion ends and the trackpad's inertia has died down */
   setInterval(function(){if(!moving&&locked){var t=Date.now();if(!window.__lastWheel||t-window.__lastWheel>220)locked=false;}},80);
   window.addEventListener('wheel',function(){window.__lastWheel=Date.now();},{passive:true});
