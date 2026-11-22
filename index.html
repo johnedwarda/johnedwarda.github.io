@@ -637,8 +637,8 @@ ul{list-style:none;margin:0;padding:0}
     gsap.fromTo(media,{clipPath:'inset(9% 7% 9% 7% round 32px)'},{clipPath:'inset(0% 0% 0% 0% round 32px)',ease:'none',
       scrollTrigger:{trigger:media,start:'top 98%',end:'top 40%',scrub:true}});
     var st={trigger:media,start:'top bottom',end:'bottom top',scrub:true};
-    var tilt=!phone.classList.contains('ivi-wrap');
-    gsap.fromTo(phone,{yPercent:tilt?12:6,rotate:tilt?-4:0},{yPercent:tilt?-8:-4,rotate:tilt?2:0,ease:'none',scrollTrigger:st});
+    var tilt=phone&&!phone.classList.contains('ivi-wrap');
+    if(phone)gsap.fromTo(phone,{yPercent:tilt?12:6,rotate:tilt?-4:0},{yPercent:tilt?-8:-4,rotate:tilt?2:0,ease:'none',scrollTrigger:st});
     if(a)gsap.fromTo(a,{yPercent:120},{yPercent:-160,ease:'none',scrollTrigger:st});
     if(b)gsap.fromTo(b,{yPercent:200},{yPercent:-80,ease:'none',scrollTrigger:st});
     gsap.from(p.querySelectorAll('.caption>*'),{y:24,opacity:0,duration:.9,ease:'power3.out',stagger:.06,
