@@ -101,6 +101,15 @@ ul{list-style:none;margin:0;padding:0}
 .project:nth-child(3n+1) .chip.b{right:15%;bottom:22%}
 @media (max-width:1100px){.project:not(:nth-child(3n+1)) .chip{display:none}}
 @media (max-width:520px){.chip{font-size:12px;height:40px;border-radius:20px;padding-right:12px}.chip .ic{width:28px;height:28px;border-radius:14px}.chip.a{left:5%!important;top:9%!important}.chip.b{right:5%!important;bottom:7%!important}}
+.ivi-wrap{height:auto!important;aspect-ratio:auto!important;width:64%;display:flex;flex-direction:column;align-items:center;gap:3%}
+.ivi-screen{width:100%;padding:6px;border-radius:20px;background:#1B1F27;box-shadow:0 0 0 1px rgba(255,255,255,.06);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.ivi-screen img{display:block;width:100%;height:auto;border-radius:14px}
+.ivi-controls{display:block;width:32%;height:auto;-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 70%,transparent 100%)}
+.media:hover .ivi-screen{transform:translateY(-6px)}
+@media (max-width:760px){.ivi-wrap{width:88%}.ivi-controls{width:56%}}
+.chip.ink{background:#1B1F27;color:#E8ECF2;box-shadow:0 12px 28px rgba(0,0,0,.4)}
+.project .chip.pin{top:7%!important;left:4%!important;bottom:auto;right:auto}
+.tags li.accent{background:var(--accent);color:var(--on-accent);border-color:transparent}
 .caption{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:8px 24px;padding-top:22px}
 .caption .idx{grid-column:span 1;font-size:14px;color:var(--muted);padding-top:8px;font-variant-numeric:tabular-nums}
 .caption h3{grid-column:span 4;font-size:clamp(28px,2.6vw,40px);letter-spacing:-.035em;line-height:1.05}
@@ -192,12 +201,28 @@ ul{list-style:none;margin:0;padding:0}
 <section class="wrap" id="work" aria-labelledby="work-title">
   <div class="section-head">
     <h2 class="section-title split" id="work-title">My work</h2>
-    <span class="count">(03)</span>
+    <span class="count">(04)</span>
   </div>
 
   <div class="work-grid">
 
     <!-- PROJECT: copy one <article class="project"> block to add a project. The first, fourth, seventh... run full width; the rest sit in pairs. -->
+    <article class="project">
+      <a class="media" href="https://flexitact.lovable.app" target="_blank" rel="noopener" style="--panel:#0A0C10" data-cursor="Try it live" aria-label="FlexiTact, open the live demo">
+        <div class="chip a ink pin"><span class="ic" style="background:#2A2F38"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5EB8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>Patent pending</div>
+        <div class="phone-wrap ivi-wrap">
+          <div class="ivi-screen"><img src="assets/flexitact-screen.webp" width="2000" height="1153" alt="FlexiTact infotainment screen: driving info on the left, navigation map on the right, and a taskbar of climate, media and phone widgets with the climate widget in focus"></div>
+          <img class="ivi-controls" src="assets/flexitact-controls.webp" width="708" height="402" alt="The two physical controls: a jog toggle set to Climate and a rotary joystick adjusting temperature">
+        </div>
+      </a>
+      <div class="caption">
+        <span class="idx">01</span>
+        <h3>FlexiTact</h3>
+        <p>In-car controls where the touchscreen and physical controls finally work together. A jog toggle moves focus across the taskbar, and a rotary joystick takes over whatever is in focus, like temperature or volume, with feedback right in the driver&rsquo;s line of sight. When you stop, control returns to what you used last.</p>
+        <ul class="tags"><li class="accent">Patent pending</li><li>In-car infotainment</li><li>Interaction design</li></ul>
+      </div>
+    </article>
+
     <article class="project">
       <a class="media" href="https://claude.ai/artifact/EmTZ2iuFB8ixbV4Xq7gmq2" target="_blank" rel="noopener" style="--panel:#D9E2D1" data-cursor="Open prototype" aria-label="bskt, open the interactive prototype">
         <div class="chip a"><span class="ic" style="background:#DCE6F3"><svg width="16" height="20" viewBox="-16 -26 32 52" aria-hidden="true"><path d="M-15-6V24H15V-6L9-18H-9Z" fill="#fff" stroke="#2F5DA8" stroke-width="2.5"/><path d="M-9-18H9V-24H-9Z" fill="#2F5DA8"/><rect x="-15" y="2" width="30" height="11" fill="#2F5DA8"/></svg></span>Oat milk is due in 2 days</div>
@@ -285,7 +310,7 @@ ul{list-style:none;margin:0;padding:0}
         </div></div>
       </a>
       <div class="caption">
-        <span class="idx">01</span>
+        <span class="idx">02</span>
         <h3>bskt</h3>
         <p>A shared shopping list for households. It learns how often you buy things, flags what&rsquo;s due soon, and sorts the list in the order you walk the store. You drag items into the cart, which prevents accidental check-offs.</p>
         <ul class="tags"><li>Mobile app</li><li>Product design</li><li>2026</li></ul>
@@ -365,7 +390,7 @@ ul{list-style:none;margin:0;padding:0}
         </div></div>
       </a>
       <div class="caption">
-        <span class="idx">02</span>
+        <span class="idx">03</span>
         <h3>reDial</h3>
         <p>The phone app, rethought for one thumb. Recents, favourites, search and the keypad, all in one intuitive view.</p>
         <ul class="tags"><li>Mobile app</li><li>Interaction design</li><li>2026</li></ul>
@@ -434,7 +459,7 @@ ul{list-style:none;margin:0;padding:0}
         </div></div>
       </a>
       <div class="caption">
-        <span class="idx">03</span>
+        <span class="idx">04</span>
         <h3>Alarm, reimagined</h3>
         <p>The whole week as a grid: tap it to add an alarm. Alarms skip holidays automatically, or you can skip just the next one. No more turning an alarm off and forgetting to turn it back on.</p>
         <ul class="tags"><li>Mobile app</li><li>UX concept</li><li>2026</li></ul>
@@ -585,7 +610,8 @@ ul{list-style:none;margin:0;padding:0}
     gsap.fromTo(media,{clipPath:'inset(9% 7% 9% 7% round 32px)'},{clipPath:'inset(0% 0% 0% 0% round 32px)',ease:'none',
       scrollTrigger:{trigger:media,start:'top 98%',end:'top 40%',scrub:true}});
     var st={trigger:media,start:'top bottom',end:'bottom top',scrub:true};
-    gsap.fromTo(phone,{yPercent:12,rotate:-4},{yPercent:-8,rotate:2,ease:'none',scrollTrigger:st});
+    var tilt=!phone.classList.contains('ivi-wrap');
+    gsap.fromTo(phone,{yPercent:tilt?12:6,rotate:tilt?-4:0},{yPercent:tilt?-8:-4,rotate:tilt?2:0,ease:'none',scrollTrigger:st});
     if(a)gsap.fromTo(a,{yPercent:120},{yPercent:-160,ease:'none',scrollTrigger:st});
     if(b)gsap.fromTo(b,{yPercent:200},{yPercent:-80,ease:'none',scrollTrigger:st});
     gsap.from(p.querySelectorAll('.caption>*'),{y:24,opacity:0,duration:.9,ease:'power3.out',stagger:.06,
