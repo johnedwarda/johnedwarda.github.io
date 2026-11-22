@@ -187,6 +187,18 @@ ul{list-style:none;margin:0;padding:0}
 @media (hover:none),(pointer:coarse){.cursor{display:none}}
 
 @media (prefers-reduced-motion:reduce){.scroll-cue svg{animation:none}.phone,.pill .dot{transition:none}}
+@media (min-width:761px){
+  .work-grid{grid-template-columns:minmax(0,1fr)}
+  .project,.project:nth-child(3n+1){grid-column:1/-1;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(28px,4vw,72px);align-items:center}
+  .project .media,.project:nth-child(3n+1) .media,.project.short .media{aspect-ratio:4/3}
+  .project.short .ivi-cabin img{object-position:50% 72%}
+  .project .caption{display:flex!important;flex-direction:column;align-items:flex-start;gap:14px;padding-top:0}
+  .project .caption .tags{justify-content:flex-start!important;margin-top:6px}
+  .project .caption h3{font-size:clamp(32px,3.4vw,54px)}
+  .project .caption p{max-width:44ch}
+  .project .chip.a{left:6%!important;top:8%!important}
+  .project .chip.b{right:6%!important;bottom:10%!important}
+}
 </style>
 </head>
 <body>
@@ -588,6 +600,39 @@ ul{list-style:none;margin:0;padding:0}
 
   ScrollTrigger.create({start:10,end:'max',onToggle:function(s){nav.classList.toggle('scrolled',s.isActive);}});
 
+  /* paging: one flick (wheel, trackpad or swipe) moves to the next section or card */
+  var stops=[];
+  function calcStops(){
+    var max=ScrollTrigger.maxScroll(window), pts=[0,max];
+    document.querySelectorAll('#work, .project, #about, #contact').forEach(function(el){
+      if(el.closest('[hidden]'))return;
+      var y=el.getBoundingClientRect().top+window.scrollY-72;
+      pts.push(Math.max(0,Math.min(max,Math.round(y))));
+    });
+    pts.sort(function(a,b){return a-b;});
+    stops=pts.filter(function(p,i){return i===0||p-pts[i-1]>40;});
+  }
+  ScrollTrigger.addEventListener('refresh',calcStops); calcStops();
+  var moving=false, locked=false;
+  function step(dir){
+    if(moving||locked||!window.ScrollToPlugin)return;
+    var y=window.scrollY, target=null, i;
+    if(dir>0){for(i=0;i<stops.length;i++){if(stops[i]>y+8){target=stops[i];break;}}}
+    else{for(i=stops.length-1;i>=0;i--){if(stops[i]<y-8){target=stops[i];break;}}}
+    if(target===null)return;
+    moving=true; locked=true;
+    gsap.to(window,{scrollTo:{y:target,autoKill:false},duration:reduce?.35:.95,ease:'power3.inOut',onComplete:function(){moving=false;}});
+  }
+  ScrollTrigger.observe({
+    target:window, type:'wheel,touch', wheelSpeed:-1, tolerance:12, preventDefault:true,
+    onUp:function(){step(1);}, onDown:function(){step(-1);},
+    onStopDelay:.18, onStop:function(){if(!moving)locked=false;}
+  });
+  /* release the lock once the motion ends and the trackpad's inertia has died down */
+  setInterval(function(){if(!moving&&locked){var t=Date.now();if(!window.__lastWheel||t-window.__lastWheel>220)locked=false;}},80);
+  window.addEventListener('wheel',function(){window.__lastWheel=Date.now();},{passive:true});
+  window.addEventListener('touchmove',function(){window.__lastWheel=Date.now();},{passive:true});
+
   if(reduce)return;
 
   /* nav hides on the way down, returns on the way up */
@@ -669,39 +714,6 @@ ul{list-style:none;margin:0;padding:0}
   /* nav mark: the dot hops on hover */
   var brand=document.querySelector('.brand');
   brand.addEventListener('pointerenter',function(){gsap.fromTo(brand.querySelector('.je-mark'),{y:0},{y:-4,duration:.18,yoyo:true,repeat:1,ease:'power2.out'});});
-
-  /* paging: one flick (wheel, trackpad or swipe) moves to the next section or card */
-  var stops=[];
-  function calcStops(){
-    var max=ScrollTrigger.maxScroll(window), pts=[0,max];
-    document.querySelectorAll('#work, .project, #about, #contact').forEach(function(el){
-      if(el.closest('[hidden]'))return;
-      var y=el.getBoundingClientRect().top+window.scrollY-72;
-      pts.push(Math.max(0,Math.min(max,Math.round(y))));
-    });
-    pts.sort(function(a,b){return a-b;});
-    stops=pts.filter(function(p,i){return i===0||p-pts[i-1]>40;});
-  }
-  ScrollTrigger.addEventListener('refresh',calcStops); calcStops();
-  var moving=false, locked=false;
-  function step(dir){
-    if(moving||locked||!window.ScrollToPlugin)return;
-    var y=window.scrollY, target=null, i;
-    if(dir>0){for(i=0;i<stops.length;i++){if(stops[i]>y+8){target=stops[i];break;}}}
-    else{for(i=stops.length-1;i>=0;i--){if(stops[i]<y-8){target=stops[i];break;}}}
-    if(target===null)return;
-    moving=true; locked=true;
-    gsap.to(window,{scrollTo:{y:target,autoKill:false},duration:.95,ease:'power3.inOut',onComplete:function(){moving=false;}});
-  }
-  ScrollTrigger.observe({
-    target:window, type:'wheel,touch', wheelSpeed:-1, tolerance:12, preventDefault:true,
-    onUp:function(){step(1);}, onDown:function(){step(-1);},
-    onStopDelay:.18, onStop:function(){if(!moving)locked=false;}
-  });
-  /* release the lock once the motion ends and the trackpad's inertia has died down */
-  setInterval(function(){if(!moving&&locked){var t=Date.now();if(!window.__lastWheel||t-window.__lastWheel>220)locked=false;}},80);
-  window.addEventListener('wheel',function(){window.__lastWheel=Date.now();},{passive:true});
-  window.addEventListener('touchmove',function(){window.__lastWheel=Date.now();},{passive:true});
 
   /* cursor label over projects */
   var cur=document.getElementById('cursor'), label=document.getElementById('cursor-label');
