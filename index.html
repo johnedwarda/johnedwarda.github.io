@@ -43,8 +43,8 @@ ul{list-style:none;margin:0;padding:0}
 .label{font-size:13px;font-weight:500;letter-spacing:.01em;color:var(--muted)}
 
 /* nav */
-.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px var(--gutter);background:var(--bg);border-bottom:1px solid transparent;transition:border-color .3s}
-.nav.scrolled{border-bottom-color:var(--line);background:var(--sheet)}
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px var(--gutter);background:var(--bg);}
+.nav.scrolled{background:var(--sheet)}
 .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:17px;text-decoration:none;letter-spacing:-.01em}
 .je-mark{width:30px;height:34px;display:block;overflow:visible}
 .brand span{transition:opacity .3s}
@@ -681,12 +681,15 @@ ul{list-style:none;margin:0;padding:0}
 
   if(reduce)return;
 
-  /* nav hides on the way down, returns on the way up */
-  var navShown=true;
-  ScrollTrigger.create({start:'top top',end:'max',onUpdate:function(self){
-    var show=self.direction<0||self.scroll()<120;
-    if(show!==navShown){navShown=show;gsap.to(nav,{yPercent:show?0:-110,duration:.45,ease:'power3.out'});}
-  }});
+  /* nav hides on the way down, returns on the way up (ignores tiny jitters) */
+  var navShown=true, navY=window.scrollY;
+  window.addEventListener('scroll',function(){
+    var y=window.scrollY, d=y-navY;
+    if(Math.abs(d)<8&&y>=120)return;
+    navY=y;
+    var show=y<120||d<0;
+    if(show!==navShown){navShown=show;gsap.to(nav,{yPercent:show?0:-110,duration:.45,ease:'power3.out',overwrite:true});}
+  },{passive:true});
 
   /* hero: load reveal */
   var lines=gsap.utils.toArray('#statement .ln>span');
