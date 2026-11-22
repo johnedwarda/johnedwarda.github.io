@@ -537,7 +537,7 @@ ul{list-style:none;margin:0;padding:0}
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollSmoother.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
 <script>
 (function(){
@@ -552,12 +552,12 @@ ul{list-style:none;margin:0;padding:0}
   });
 
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var smoother=null;
+  
 
   function goTo(sel){
     var el=document.querySelector(sel);
     if(!el)return;
-    if(smoother){smoother.scrollTo(el,true,'top 70px');}
+    if(window.ScrollToPlugin&&!reduce){gsap.to(window,{scrollTo:{y:el,offsetY:72,autoKill:false},duration:.9,ease:'power3.inOut'});}
     else{el.scrollIntoView({behavior:reduce?'auto':'smooth'});}
   }
   document.querySelectorAll('[data-scroll]').forEach(function(a){
@@ -569,16 +569,12 @@ ul{list-style:none;margin:0;padding:0}
     return;
   }
   gsap.registerPlugin(ScrollTrigger);
-  if(window.ScrollSmoother)gsap.registerPlugin(ScrollSmoother);
+  if(window.ScrollToPlugin)gsap.registerPlugin(ScrollToPlugin);
   if(window.SplitText)gsap.registerPlugin(SplitText);
 
   ScrollTrigger.create({start:10,end:'max',onToggle:function(s){nav.classList.toggle('scrolled',s.isActive);}});
 
   if(reduce)return;
-
-  if(window.ScrollSmoother){
-    smoother=ScrollSmoother.create({wrapper:'#smooth-wrapper',content:'#smooth-content',smooth:1.15,effects:false,smoothTouch:.1});
-  }
 
   /* nav hides on the way down, returns on the way up */
   var navShown=true;
@@ -660,28 +656,37 @@ ul{list-style:none;margin:0;padding:0}
   var brand=document.querySelector('.brand');
   brand.addEventListener('pointerenter',function(){gsap.fromTo(brand.querySelector('.je-mark'),{y:0},{y:-4,duration:.18,yoyo:true,repeat:1,ease:'power2.out'});});
 
-  /* snap: when a scroll comes to rest near the top of a section, ease it into place */
-  var snapPoints=[0,1];
-  function calcSnap(){
-    var max=ScrollTrigger.maxScroll(window)||1, pts=[0,1];
-    document.querySelectorAll('.hero, #work, .project, #about, #contact').forEach(function(el){
-      var y=smoother?smoother.offset(el,'top 72px'):el.getBoundingClientRect().top+window.scrollY-72;
-      pts.push(gsap.utils.clamp(0,1,y/max));
+  /* paging: one flick (wheel, trackpad or swipe) moves to the next section or card */
+  var stops=[];
+  function calcStops(){
+    var max=ScrollTrigger.maxScroll(window), pts=[0,max];
+    document.querySelectorAll('#work, .project, #about, #contact').forEach(function(el){
+      var y=el.getBoundingClientRect().top+window.scrollY-72;
+      pts.push(Math.max(0,Math.min(max,Math.round(y))));
     });
     pts.sort(function(a,b){return a-b;});
-    snapPoints=pts.filter(function(p,i){return i===0||p-pts[i-1]>.002;});
+    stops=pts.filter(function(p,i){return i===0||p-pts[i-1]>40;});
   }
-  ScrollTrigger.addEventListener('refresh',calcSnap);
-  ScrollTrigger.create({start:0,end:'max',snap:{
-    snapTo:function(v,self){
-      var dir=self&&self.direction||1, pick=null;
-      if(dir>0){for(var i=0;i<snapPoints.length;i++){if(snapPoints[i]>=v-.001){pick=snapPoints[i];break;}}}
-      else{for(var j=snapPoints.length-1;j>=0;j--){if(snapPoints[j]<=v+.001){pick=snapPoints[j];break;}}}
-      return pick===null?v:pick;
-    },
-    duration:{min:.4,max:1},delay:.08,ease:'power3.inOut',inertia:false
-  }});
-  calcSnap();
+  ScrollTrigger.addEventListener('refresh',calcStops); calcStops();
+  var moving=false, locked=false;
+  function step(dir){
+    if(moving||locked||!window.ScrollToPlugin)return;
+    var y=window.scrollY, target=null, i;
+    if(dir>0){for(i=0;i<stops.length;i++){if(stops[i]>y+8){target=stops[i];break;}}}
+    else{for(i=stops.length-1;i>=0;i--){if(stops[i]<y-8){target=stops[i];break;}}}
+    if(target===null)return;
+    moving=true; locked=true;
+    gsap.to(window,{scrollTo:{y:target,autoKill:false},duration:.95,ease:'power3.inOut',onComplete:function(){moving=false;}});
+  }
+  ScrollTrigger.observe({
+    target:window, type:'wheel,touch', wheelSpeed:-1, tolerance:12, preventDefault:true,
+    onUp:function(){step(1);}, onDown:function(){step(-1);},
+    onStopDelay:.18, onStop:function(){if(!moving)locked=false;}
+  });
+  /* release the lock once the motion ends and the trackpad's inertia has died down */
+  setInterval(function(){if(!moving&&locked){var t=Date.now();if(!window.__lastWheel||t-window.__lastWheel>220)locked=false;}},80);
+  window.addEventListener('wheel',function(){window.__lastWheel=Date.now();},{passive:true});
+  window.addEventListener('touchmove',function(){window.__lastWheel=Date.now();},{passive:true});
 
   /* cursor label over projects */
   var cur=document.getElementById('cursor'), label=document.getElementById('cursor-label');
