@@ -805,8 +805,8 @@ window.addEventListener('beforeunload',function(){window.scrollTo(0,0);});
   /* hero: quiet dot grid that swells, turns blue and leans away around the cursor */
   (function(){
     var cv=document.getElementById('hero-fx'); if(!cv||!cv.getContext)return;
-    if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches){cv.remove();return;}
-    var ctx=cv.getContext('2d'), hero=cv.parentNode, dpr=1, W=0, H=0, GAP=30, R=170;
+    var touch=!window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    var ctx=cv.getContext('2d'), hero=cv.parentNode, dpr=1, W=0, H=0, GAP=30, R=touch?125:170;
     var mx=-1e4, my=-1e4, sx=-1e4, sy=-1e4, act=0, target=0, ink=[17,17,19], acc=[59,43,239], raf=0;
     function hex(v,f){v=(v||'').trim();var m=/^#([0-9a-f]{6})$/i.exec(v);if(!m)return f;var n=parseInt(m[1],16);return[n>>16&255,n>>8&255,n&255];}
     function colors(){var cs=getComputedStyle(document.documentElement);ink=hex(cs.getPropertyValue('--ink'),ink);acc=hex(cs.getPropertyValue('--accent'),acc);}
@@ -829,6 +829,18 @@ window.addEventListener('beforeunload',function(){window.scrollTo(0,0);});
       if(Math.abs(mx-sx)>0.3||Math.abs(my-sy)>0.3||Math.abs(target-act)>0.005){raf=requestAnimationFrame(tick);}else{raf=0;}
     }
     function kick(){if(!raf)raf=requestAnimationFrame(tick);}
+    /* touch screens have no cursor: a virtual one drifts across the hero, settles on My work, then fades */
+    function autopilot(){
+      var btn=document.querySelector('.hero-meta .pill'); if(!btn)return;
+      var p={x:W*0.12,y:H*0.22};
+      function aim(){var br=btn.getBoundingClientRect(), hr=hero.getBoundingClientRect();return{x:br.left+br.width/2-hr.left,y:br.top+br.height/2-hr.top};}
+      var tl=gsap.timeline({delay:1.6,onStart:function(){mx=sx=p.x;my=sy=p.y;target=1;},onUpdate:function(){mx=p.x;my=p.y;kick();}});
+      [[0.82,0.3],[0.3,0.46],[0.74,0.62]].forEach(function(q){tl.to(p,{x:W*q[0],y:H*q[1],duration:1.05,ease:'sine.inOut'});});
+      tl.to(p,{x:function(){return aim().x;},y:function(){return aim().y;},duration:1.1,ease:'power2.inOut'});
+      tl.to({},{duration:0.8});
+      tl.call(function(){target=0;kick();});
+    }
+    if(touch){window.addEventListener('resize',size);colors();size();autopilot();return;}
     window.addEventListener('pointermove',function(e){
       var r=cv.getBoundingClientRect();
       var inside=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
