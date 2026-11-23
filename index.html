@@ -648,6 +648,17 @@ window.addEventListener('beforeunload',function(){window.scrollTo(0,0);});
 
   ScrollTrigger.create({start:10,end:'max',onToggle:function(s){nav.classList.toggle('scrolled',s.isActive);}});
 
+  /* keep the contact section (and its wordmark) out of view while the last project is snapped in place */
+  function padWork(){
+    var w=document.getElementById('work'); if(!w)return;
+    var ps=w.querySelectorAll('.project'), last=ps[ps.length-1]; if(!last)return;
+    w.style.paddingBottom='0px';
+    var need=window.innerHeight-72-last.offsetHeight+24;
+    w.style.paddingBottom=Math.max(0,Math.round(need))+'px';
+  }
+  padWork();
+  ScrollTrigger.addEventListener('refreshInit',padWork);
+
   /* nav button: "Back to top" while scrolling up, "Get in touch" near the top */
   var cta=document.getElementById('navcta'), ctaLbl=cta.querySelector('.cta-label'), lastY=window.scrollY, backMode=false;
   function setBack(on){
