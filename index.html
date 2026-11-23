@@ -233,7 +233,6 @@ ul{list-style:none;margin:0;padding:0}
 .media:hover .ext{transform:scale(1.08)}
 .media:hover .ext svg{transform:translate(1px,-1px)}
 .media[style*="#2A1B42"] .ext{background:rgba(255,255,255,.14);color:#F1EAFB;box-shadow:none}
-.pixel-lens{position:fixed;left:0;top:0;width:190px;height:190px;border-radius:50%;pointer-events:none;z-index:40;opacity:0;box-shadow:0 0 0 1px rgba(17,17,19,.18),0 18px 40px rgba(17,17,19,.22);will-change:transform}
 </style>
 </head>
 <body>
@@ -786,13 +785,9 @@ window.addEventListener('beforeunload',function(){window.scrollTo(0,0);});
   var brand=document.querySelector('.brand');
   brand.addEventListener('pointerenter',function(){gsap.fromTo(brand.querySelector('.je-mark'),{y:0},{y:-4,duration:.18,yoyo:true,repeat:1,ease:'power2.out'});});
 
-  /* hero cursor effect: 'lens' (pixel magnifier) or 'dots' (dot grid). Change this one word to switch back. */
-  var HERO_FX='lens';
-
   /* hero: quiet dot grid that swells, turns blue and leans away around the cursor */
   (function(){
     var cv=document.getElementById('hero-fx'); if(!cv||!cv.getContext)return;
-    if(HERO_FX!=='dots'){cv.remove();return;}
     if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches){cv.remove();return;}
     var ctx=cv.getContext('2d'), hero=cv.parentNode, dpr=1, W=0, H=0, GAP=30, R=170;
     var mx=-1e4, my=-1e4, sx=-1e4, sy=-1e4, act=0, target=0, ink=[17,17,19], acc=[59,43,239], raf=0;
@@ -828,64 +823,6 @@ window.addEventListener('beforeunload',function(){window.scrollTo(0,0);});
     window.addEventListener('resize',size);
     try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){colors();draw();});}catch(e){}
     colors(); size();
-  })();
-
-  /* hero: a magnifying lens that shows the screen's individual RGB pixels under the cursor */
-  (function(){
-    if(HERO_FX!=='lens')return;
-    if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches)return;
-    var hero=document.querySelector('.hero'); if(!hero)return;
-    var LENS=190, Z=6, src=null, sctx=null, data=null, SW=0, SH=0, mx=0, my=0, lx=0, ly=0, on=false, vis=0, raf=0;
-    var lens=document.createElement('canvas'); lens.className='pixel-lens'; lens.setAttribute('aria-hidden','true');
-    var dpr=Math.min(window.devicePixelRatio||1,2); lens.width=LENS*dpr; lens.height=LENS*dpr; document.body.appendChild(lens);
-    var lctx=lens.getContext('2d');
-    function capture(){
-      if(!window.html2canvas||window.scrollY>4)return;
-      var bg=getComputedStyle(document.body).backgroundColor;
-      html2canvas(hero,{backgroundColor:bg,scale:1,logging:false,ignoreElements:function(el){return el.classList&&el.classList.contains('pixel-lens');}}).then(function(c){
-        src=c; SW=c.width; SH=c.height; sctx=c.getContext('2d'); data=sctx.getImageData(0,0,SW,SH).data;
-      }).catch(function(){});
-    }
-    function draw(){
-      lctx.setTransform(dpr,0,0,dpr,0,0); lctx.clearRect(0,0,LENS,LENS);
-      lctx.save(); lctx.beginPath(); lctx.arc(LENS/2,LENS/2,LENS/2-1,0,6.2832); lctx.clip();
-      lctx.fillStyle='#050506'; lctx.fillRect(0,0,LENS,LENS);
-      var r=hero.getBoundingClientRect(), cx=lx-r.left, cy=ly-r.top, n=Math.ceil(LENS/Z/2)+1;
-      var bx=Math.floor(cx), by=Math.floor(cy), fx=(cx-bx)*Z, fy=(cy-by)*Z;
-      for(var j=-n;j<=n;j++){for(var i=-n;i<=n;i++){
-        var sx=bx+i, sy=by+j, R=236, G=236, B=232;
-        if(data&&sx>=0&&sy>=0&&sx<SW&&sy<SH){var k=(sy*SW+sx)*4;R=data[k];G=data[k+1];B=data[k+2];}
-        var x=LENS/2+i*Z-fx, y=LENS/2+j*Z-fy, w=(Z-1.2)/3;
-        lctx.fillStyle='rgb('+R+',0,0)'; lctx.fillRect(x+0.3,y+0.4,w,Z-1);
-        lctx.fillStyle='rgb(0,'+G+',0)'; lctx.fillRect(x+0.3+w+0.3,y+0.4,w,Z-1);
-        lctx.fillStyle='rgb(0,0,'+B+')'; lctx.fillRect(x+0.3+2*(w+0.3),y+0.4,w,Z-1);
-      }}
-      lctx.save(); lctx.setTransform(1,0,0,1,0,0); lctx.globalCompositeOperation='lighter'; lctx.globalAlpha=.55; lctx.filter='blur('+(2.5*dpr)+'px)'; lctx.drawImage(lens,0,0); lctx.restore();
-      var g=lctx.createRadialGradient(LENS*0.35,LENS*0.3,4,LENS/2,LENS/2,LENS/2);
-      g.addColorStop(0,'rgba(255,255,255,.18)'); g.addColorStop(.45,'rgba(255,255,255,0)'); g.addColorStop(.85,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,.35)');
-      lctx.fillStyle=g; lctx.fillRect(0,0,LENS,LENS);
-      lctx.restore();
-    }
-    function tick(){
-      lx+=(mx-lx)*0.25; ly+=(my-ly)*0.25; vis+=((on?1:0)-vis)*0.18;
-      lens.style.transform='translate('+(lx-LENS/2)+'px,'+(ly-LENS/2)+'px) scale('+(0.6+0.4*vis)+')';
-      lens.style.opacity=vis.toFixed(3);
-      if(vis>0.01)draw();
-      if(Math.abs(mx-lx)>0.2||Math.abs(my-ly)>0.2||Math.abs((on?1:0)-vis)>0.01){raf=requestAnimationFrame(tick);}else{raf=0;}
-    }
-    function kick(){if(!raf)raf=requestAnimationFrame(tick);}
-    window.addEventListener('pointermove',function(e){
-      var r=hero.getBoundingClientRect();
-      on=!!data&&window.scrollY<40&&e.clientY>=r.top&&e.clientY<=r.bottom&&e.clientX>=r.left&&e.clientX<=r.right;
-      if(!vis){lx=e.clientX;ly=e.clientY;}
-      mx=e.clientX; my=e.clientY; kick();
-    },{passive:true});
-    window.addEventListener('scroll',function(){if(window.scrollY>=40&&on){on=false;kick();}},{passive:true});
-    document.addEventListener('pointerleave',function(){on=false;kick();});
-    var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(capture,300);});
-    var s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload=function(){document.fonts.ready.then(function(){setTimeout(capture,1700);});};
-    document.head.appendChild(s);
   })();
 
   /* cursor label over projects */
