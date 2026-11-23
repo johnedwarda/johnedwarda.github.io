@@ -831,14 +831,22 @@ window.addEventListener('beforeunload',function(){window.scrollTo(0,0);});
     function kick(){if(!raf)raf=requestAnimationFrame(tick);}
     /* touch screens have no cursor: a virtual one drifts across the hero, settles on My work, then fades */
     function autopilot(){
-      var btn=document.querySelector('.hero-meta .pill'); if(!btn)return;
-      var p={x:W*0.12,y:H*0.22};
-      function aim(){var br=btn.getBoundingClientRect(), hr=hero.getBoundingClientRect();return{x:br.left+br.width/2-hr.left,y:br.top+br.height/2-hr.top};}
-      var tl=gsap.timeline({delay:1.6,onStart:function(){mx=sx=p.x;my=sy=p.y;target=1;},onUpdate:function(){mx=p.x;my=p.y;kick();}});
-      [[0.82,0.3],[0.3,0.46],[0.74,0.62]].forEach(function(q){tl.to(p,{x:W*q[0],y:H*q[1],duration:1.05,ease:'sine.inOut'});});
-      tl.to(p,{x:function(){return aim().x;},y:function(){return aim().y;},duration:1.1,ease:'power2.inOut'});
-      tl.to({},{duration:0.8});
+      var btn=document.querySelector('.hero-meta .pill'), blk=document.querySelector('.hero-block'); if(!btn||!blk)return;
+      var hr=hero.getBoundingClientRect(), kr=blk.getBoundingClientRect(), br=btn.getBoundingClientRect();
+      var top=kr.top-hr.top, bot=kr.bottom-hr.top, bx=br.left+br.width/2-hr.left, by=br.top+br.height/2-hr.top;
+      /* clockwise around the text: in from the left above it, across the top, down the right, back along the bottom, up to My work */
+      var P=[[-W*0.45,top-90],[-W*0.1,top-80],[W*0.5,top-95],[W*1.08,top+(bot-top)*0.35],[W*0.8,bot+90],[W*0.2,bot+80],[bx,by],[bx,by]];
+      function cr(a,b,c,d,t){var t2=t*t,t3=t2*t;return 0.5*((2*b)+(-a+c)*t+(2*a-5*b+4*c-d)*t2+(-a+3*b-3*c+d)*t3);}
+      function at(u){var n=P.length-3, f=Math.min(n-1e-6,u*n), i=Math.floor(f), t=f-i;
+        return [cr(P[i][0],P[i+1][0],P[i+2][0],P[i+3][0],t), cr(P[i][1],P[i+1][1],P[i+2][1],P[i+3][1],t)];}
+      var o={u:0,r:230}, start=at(0);
+      var tl=gsap.timeline({delay:1.4,onStart:function(){mx=sx=start[0];my=sy=start[1];target=1;},
+        onUpdate:function(){var q=at(o.u);mx=q[0];my=q[1];R=o.r;kick();}});
+      tl.to(o,{u:1,duration:4.4,ease:'power1.inOut'},0);
+      tl.to(o,{r:100,duration:4.4,ease:'power2.in'},0);
+      tl.to(o,{r:138,duration:0.3,ease:'sine.inOut',yoyo:true,repeat:5});
       tl.call(function(){target=0;kick();});
+      tl.to(o,{r:60,duration:0.9,ease:'power2.in'});
     }
     if(touch){window.addEventListener('resize',size);colors();size();autopilot();return;}
     window.addEventListener('pointermove',function(e){
