@@ -233,6 +233,10 @@ ul{list-style:none;margin:0;padding:0}
 .media:hover .ext{transform:scale(1.08)}
 .media:hover .ext svg{transform:translate(1px,-1px)}
 .media[style*="#2A1B42"] .ext{background:rgba(255,255,255,.14);color:#F1EAFB;box-shadow:none}
+.hero{--hsx:0;--hsy:4}
+.hero .statement{filter:drop-shadow(calc(var(--hsx)*1px) calc(var(--hsy)*1px) 12px rgba(17,17,19,.13))}
+.hero .hero-intro{filter:drop-shadow(calc(var(--hsx)*.6px) calc(var(--hsy)*.6px) 8px rgba(17,17,19,.10))}
+.hero .hero-meta .pill{box-shadow:calc(var(--hsx)*.8px) calc(var(--hsy)*.8px + 6px) 22px rgba(17,17,19,.16)}
 </style>
 </head>
 <body>
@@ -785,9 +789,13 @@ window.addEventListener('beforeunload',function(){window.scrollTo(0,0);});
   var brand=document.querySelector('.brand');
   brand.addEventListener('pointerenter',function(){gsap.fromTo(brand.querySelector('.je-mark'),{y:0},{y:-4,duration:.18,yoyo:true,repeat:1,ease:'power2.out'});});
 
+  /* hero cursor effect: 'magnetic' (current) or 'dots' (the earlier dot grid). Change this one word to switch back. */
+  var HERO_FX='magnetic';
+
   /* hero: quiet dot grid that swells, turns blue and leans away around the cursor */
   (function(){
     var cv=document.getElementById('hero-fx'); if(!cv||!cv.getContext)return;
+    if(HERO_FX!=='dots'){cv.remove();return;}
     if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches){cv.remove();return;}
     var ctx=cv.getContext('2d'), hero=cv.parentNode, dpr=1, W=0, H=0, GAP=30, R=170;
     var mx=-1e4, my=-1e4, sx=-1e4, sy=-1e4, act=0, target=0, ink=[17,17,19], acc=[59,43,239], raf=0;
@@ -823,6 +831,33 @@ window.addEventListener('beforeunload',function(){window.scrollTo(0,0);});
     window.addEventListener('resize',size);
     try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){colors();draw();});}catch(e){}
     colors(); size();
+  })();
+
+  /* hero: magnetic layers with a faint shadow that falls away from the cursor */
+  (function(){
+    if(HERO_FX!=='magnetic')return;
+    if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+    var hero=document.querySelector('.hero'), h1=document.getElementById('statement'),
+        introEl=document.getElementById('hero-intro'), meta=document.getElementById('hero-meta');
+    if(!hero||!h1)return;
+    var layers=[[h1,12],[introEl,7],[meta,4]].filter(function(l){return l[0];});
+    var q=layers.map(function(l){return{s:l[1],x:gsap.quickTo(l[0],'x',{duration:.9,ease:'power3'}),y:gsap.quickTo(l[0],'y',{duration:.9,ease:'power3'})};});
+    var sx=gsap.quickTo(hero,'--hsx',{duration:1.1,ease:'power3'}), sy=gsap.quickTo(hero,'--hsy',{duration:1.1,ease:'power3'});
+    gsap.set(hero,{'--hsx':0,'--hsy':4});
+    var ready=false; setTimeout(function(){ready=true;},1600);
+    function move(nx,ny){
+      q.forEach(function(l){l.x(nx*l.s);l.y(ny*l.s);});
+      sx(-nx*10); sy(4-ny*10);
+    }
+    window.addEventListener('pointermove',function(e){
+      if(!ready)return;
+      var r=hero.getBoundingClientRect();
+      if(e.clientY>r.bottom||r.bottom<0){move(0,0);return;}
+      var nx=Math.max(-1,Math.min(1,(e.clientX-(r.left+r.width/2))/(r.width/2)));
+      var ny=Math.max(-1,Math.min(1,(e.clientY-(r.top+r.height/2))/(r.height/2)));
+      move(nx,ny);
+    },{passive:true});
+    document.addEventListener('pointerleave',function(){move(0,0);});
   })();
 
   /* cursor label over projects */
