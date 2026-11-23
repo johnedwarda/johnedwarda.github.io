@@ -119,8 +119,7 @@ ul{list-style:none;margin:0;padding:0}
 @media (max-width:520px){.chip{font-size:12px;height:40px;border-radius:20px;padding-right:12px}.chip .ic{width:28px;height:28px;border-radius:14px}.chip.a{left:5%!important;top:9%!important}.chip.b{right:5%!important;bottom:7%!important}}
 .ivi-split{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .ivi-cabin{position:relative;overflow:hidden}
-.ivi-cabin img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%;transform:scale(1.02);transition:transform .8s cubic-bezier(.2,.8,.2,1)}
-.media:hover .ivi-cabin img{transform:scale(1.07)}
+.ivi-cabin img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%;transform:scale(1.02);will-change:transform}
 .ivi-side{display:grid;place-items:center;min-width:0}
 .ivi-side .ivi-wrap{width:84%}
 .ivi-side .ivi-controls{width:46%}
@@ -289,7 +288,6 @@ ul{list-style:none;margin:0;padding:0}
     <!-- PROJECT: copy one <article class="project"> block to add a project. The first, fourth, seventh... run full width; the rest sit in pairs. -->
     <article class="project short">
       <div class="media nolink" style="--panel:#0A0C10">
-        <div class="chip a ink pin"><span class="ic" style="background:#2A2F38"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5EB8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>Patent pending</div>
         <div class="ivi-split">
           <div class="ivi-cabin"><img src="assets/flexitact-cabin.webp" width="1400" height="1458" alt="Dark car interior with the FlexiTact UI on the centre screen, and the round jog toggle and rotary joystick on the centre console"></div>
         </div>
@@ -783,6 +781,8 @@ window.addEventListener('beforeunload',function(){window.scrollTo(0,0);});
     gsap.fromTo(media,{clipPath:'inset(9% 7% 9% 7% round 32px)'},{clipPath:'inset(0% 0% 0% 0% round 32px)',ease:'none',
       scrollTrigger:{trigger:media,start:'top 98%',end:'top 40%',scrub:true}});
     var st={trigger:media,start:'top bottom',end:'bottom top',scrub:true};
+    var cabin=p.querySelector('.ivi-cabin img');
+    if(cabin)gsap.fromTo(cabin,{scale:1.2,yPercent:7},{scale:1.02,yPercent:-2,ease:'none',scrollTrigger:{trigger:media,start:'top bottom',end:'bottom top',scrub:true}});
     var tilt=phone&&!phone.classList.contains('ivi-wrap');
     if(phone)gsap.fromTo(phone,{yPercent:tilt?12:6,rotate:tilt?-4:0},{yPercent:tilt?-8:-4,rotate:tilt?2:0,ease:'none',scrollTrigger:st});
     if(a)gsap.fromTo(a,{yPercent:120},{yPercent:-160,ease:'none',scrollTrigger:st});
